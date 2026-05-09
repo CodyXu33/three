@@ -25,15 +25,12 @@ public class HandleAccept implements Runnable{
                         String[] split = message.split(":");
                         String username = split[1];
                         SocketMapUtil.onLineUserMap.put(username, client);
-                        System.out.println((username + "上线了"));
                         broadcast((username + "上线了\n"),username);
                     }else if(message.startsWith("LOGOUT")){
                         String username = message.split(":")[1];
-                        System.out.println((username + "下线了\n"));
                         broadcast((username + "下线了\n"),username);
                         SocketMapUtil.onLineUserMap.remove(username);
-
-
+                        break;
                     }else {
                         broadcast(message);
                     }
@@ -41,6 +38,7 @@ public class HandleAccept implements Runnable{
             }
         }catch (Exception e) {
             e.printStackTrace();
+            SocketMapUtil.onLineUserMap.entrySet().removeIf(entry -> entry.getValue() == client);
         }
 
     }

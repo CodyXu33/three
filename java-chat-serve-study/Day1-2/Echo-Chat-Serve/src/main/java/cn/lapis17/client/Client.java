@@ -14,6 +14,7 @@ public class Client {
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
+        //监听服务器信息
         new Thread(() -> {
             while (true) {
 
@@ -31,6 +32,9 @@ public class Client {
 
 
         }).start();
+        //end 监听服务器信息
+
+
         System.out.println("请输入用户名：");
         String username = new Scanner(System.in).nextLine();
         bufferedWriter.write("LOGIN:" + username + "\n");
@@ -48,6 +52,7 @@ public class Client {
             bufferedWriter.write(username + ":" + line + "\n");
             bufferedWriter.flush();
         }
+
         bufferedWriter.close();
         bufferedReader.close();
         socket.close();
