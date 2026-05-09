@@ -8,6 +8,9 @@ import java.util.Map;
 
 public class HandleAccept implements Runnable{
 
+    BufferedWriter bufferedWriter = null;
+    BufferedReader bufferedReader = null;
+
     Socket client;
     public HandleAccept(Socket socket) {
         this.client = socket;
@@ -16,8 +19,9 @@ public class HandleAccept implements Runnable{
     @Override
     public void run() {
         try {
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            bufferedReader  = new BufferedReader(new InputStreamReader(client.getInputStream()));
             while (true) {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String message = bufferedReader.readLine();
                 //消息处理
                 if (message != null) {
@@ -49,6 +53,7 @@ public class HandleAccept implements Runnable{
         thread.start();
     }
 
+    //广播
     private void broadcast(String message) throws IOException {
         String username = message.split(":")[0];
         String messageContent = message.split(":")[1];
@@ -60,7 +65,6 @@ public class HandleAccept implements Runnable{
                 bufferedWriter.write("<----"+username+"说："+messageContent+"\n");
                 bufferedWriter.flush();
             }else {
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
                 bufferedWriter.write("---->你说："+messageContent+"\n");
                 bufferedWriter.flush();
             }
